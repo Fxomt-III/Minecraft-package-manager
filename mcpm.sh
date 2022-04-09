@@ -1,0 +1,1 @@
+python3 mcpm_src.py $@

@@ -1,0 +1,1 @@
+python mcpm_src.py %*
