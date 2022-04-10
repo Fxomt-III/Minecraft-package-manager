@@ -3,6 +3,7 @@ import json
 from pprint import pprint
 import os
 from sys import argv as a
+import re
 
 def cur_dir():
     return __file__.replace('\\', '/')[::-1].split('/', 1)[1][::-1]
@@ -71,8 +72,9 @@ def download_jar_mod(urllink, dir):
         cdir = os.getcwd()
 
         os.chdir(data_json['directories'][dir])
+        print(f"Changed to {data_json['directories'][dir]}")
         print("Writing mod now...")
-        with open(f'{cur_dir()}/{filename}', 'wb') as f:
+        with open(f'{data_json["directories"][dir]}/{filename}', 'wb') as f:
             f.write(url)
         print("Done! mod has been installed.")
 
@@ -80,7 +82,7 @@ def download_jar_mod(urllink, dir):
 
         with open(f'{cur_dir()}/installed.json', 'r+') as f:
             _data = json.load(f)
-            _data[dir].update({data['title'].lower(): filename})
+            _data[dir].update({re.sub('\s+', '-', data['title'].lower()): filename})
             f.seek(0)
             json.dump(_data, f, indent=4)
             f.truncate()
@@ -113,6 +115,12 @@ def add_mod_dir(dirname, dir):
     with open(f'{cur_dir()}/data.json', 'r+') as f:
         data = json.load(f)
         data['directories'][dirname] = dir
+        f.seek(0)
+        json.dump(data, f, indent=4)
+        f.truncate()
+    with open(f'{cur_dir()}/installed.json', 'r+') as f:
+        data = json.load(f)
+        data[dirname] = {}
         f.seek(0)
         json.dump(data, f, indent=4)
         f.truncate()
