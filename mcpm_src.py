@@ -4,8 +4,10 @@ from pprint import pprint
 import os
 from sys import argv as a
 
-data_json = json.loads(open('data.json').read())
+def cur_dir():
+    return __file__.replace('\\', '/')[::-1].split('/', 1)[1][::-1]
 
+data_json = json.loads(open(f'{cur_dir()}/data.json').read())
 
 def link(wanted):
     return f'https://api.modrinth.com/v2/{wanted}'
@@ -64,19 +66,19 @@ def download_jar_mod(urllink, dir):
         print("Got the link.")
         filename = version_jar['filename']
 
-        data_json = json.loads(open('data.json').read())
+        data_json = json.loads(open(f'{cur_dir()}/data.json').read())
         print("Changing directory now...")
         cdir = os.getcwd()
 
         os.chdir(data_json['directories'][dir])
         print("Writing mod now...")
-        with open(filename, 'wb') as f:
+        with open(f'{cur_dir()}/{filename}', 'wb') as f:
             f.write(url)
         print("Done! mod has been installed.")
 
         os.chdir(cdir)
 
-        with open('installed.json', 'r+') as f:
+        with open(f'{cur_dir()}/installed.json', 'r+') as f:
             _data = json.load(f)
             _data[dir].update({data['title'].lower(): filename})
             f.seek(0)
@@ -88,7 +90,7 @@ def download_jar_mod(urllink, dir):
 
 
 def remove_mod(name, dir):
-    with open('installed.json', 'r+') as f:
+    with open(f'{cur_dir()}/installed.json', 'r+') as f:
         text = f.read()
         data = json.loads(text)
         
@@ -108,7 +110,7 @@ def remove_mod(name, dir):
 
 
 def add_mod_dir(dirname, dir):
-    with open('data.json', 'r+') as f:
+    with open(f'{cur_dir()}/data.json', 'r+') as f:
         data = json.load(f)
         data['directories'][dirname] = dir
         f.seek(0)
@@ -116,14 +118,14 @@ def add_mod_dir(dirname, dir):
         f.truncate()
 
 def list_mods(dir):
-    with open('installed.json', 'r') as f:
+    with open(f'{cur_dir()}/installed.json', 'r') as f:
         data = json.loads(f.read())[dir]
         print(f"--- {dir} mods ---")
         for modname, _ in data.items():
             print(f"{modname}")
 
 def check_mod(name, dir):
-    with open('installed.json', 'r') as f:
+    with open(f'{cur_dir()}/installed.json', 'r') as f:
         data = json.loads(f.read())[dir]
         if name in data:
             print("Mod exists.")

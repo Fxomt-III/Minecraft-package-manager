@@ -1,1 +1,1 @@
-python mcpm_src.py %*
+python %~dp0\mcpm_src.py %*

@@ -1,1 +1,7 @@
-python3 mcpm_src.py $@
+#!/bin/bash 
+# Absolute path to this script, e.g. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f "$0")
+# Absolute path this script is in, thus /home/user/bin
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+python3 $SCRIPTPATH/mcpm_src.py $@
